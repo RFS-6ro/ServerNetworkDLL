@@ -1,11 +1,14 @@
-﻿namespace Network
+﻿using System;
+
+namespace Network
 {
-	public abstract class LoggerBase
+	public interface LoggerBase
 	{
-		public abstract void PrintSuccess(string message);
+		public void PrintSuccess(string message);
 
-		public abstract void PrintWarning(string message);
+		public void PrintWarning(string message);
 
-		public abstract void PrintError(string message);
+		public void PrintError(string message);
+
 	}
 }
