@@ -10,7 +10,5 @@ namespace Network
 		public abstract void ReceiveCallback(IAsyncResult result);
 
 		public abstract void Disconnect();
-
-		public abstract void CompleteDisconnect();
 	}
 }

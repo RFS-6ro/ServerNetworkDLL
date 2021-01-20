@@ -22,8 +22,7 @@ namespace Network
 
 				if (_data.Length < 4)
 				{
-					//here was instance.Disconnect();
-					Disconnect();
+					DisconnectClient();
 					return;
 				}
 
@@ -41,6 +40,6 @@ namespace Network
 
 		public abstract void Disconnect();
 
-		public abstract void CompleteDisconnect();
+		protected abstract void DisconnectClient();
 	}
 }

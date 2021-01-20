@@ -43,7 +43,7 @@ namespace Network
 
 				if (receivedLength <= 0)
 				{
-					Disconnect();
+					DisconnectClient();
 
 					_logger.PrintWarning("Zero bytes were received. Disconnecting...");
 
@@ -67,6 +67,6 @@ namespace Network
 
 		public abstract void Disconnect();
 
-		public abstract void CompleteDisconnect();
+		protected abstract void DisconnectClient();
 	}
 }
