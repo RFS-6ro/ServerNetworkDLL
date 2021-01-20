@@ -3,9 +3,9 @@ using System.Net.Sockets;
 
 namespace Network
 {
-	public abstract class TCPBase : INeedLogger
+	public abstract class TCPBase : AbstractSocket<TcpClient>
 	{
-		public TcpClient Socket;
+		public TcpClient Socket { get; protected set; }
 
 		protected NetworkStream _stream;
 		protected Packet _receivedPacket;
@@ -13,7 +13,7 @@ namespace Network
 
 		public abstract LoggerBase _logger { get; }
 
-		public abstract void Connect(TcpClient socket = null);
+		public abstract void Connect(TcpClient socket = default);
 
 		public void SendData(Packet packet)
 		{
@@ -33,7 +33,7 @@ namespace Network
 
 		protected abstract bool HandleReceivedData(byte[] data);
 
-		protected void ReceiveCallback(IAsyncResult result)
+		public void ReceiveCallback(IAsyncResult result)
 		{
 			_logger.PrintSuccess($"Receiving data {DateTime.Now}");
 			try
@@ -66,5 +66,7 @@ namespace Network
 		}
 
 		public abstract void Disconnect();
+
+		public abstract void CompleteDisconnect();
 	}
 }
