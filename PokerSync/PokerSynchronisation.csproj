@@ -12,4 +12,7 @@
       <HintPath>..\..\..\SocketNetworkTest\Socket Network Test Project\Assets\Packages\Network.dll</HintPath>
     </Reference>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Network\Network.csproj" />
+  </ItemGroup>
 </Project>
