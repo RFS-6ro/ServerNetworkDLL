@@ -12,4 +12,17 @@
     <OutputPath>..\Assets\Packages</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="PokerSynchronisation\Class1.cs" />
+    <Compile Remove="PokerSynchronisation\PokerSynchronisation.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="PokerSynchronisation\obj\PokerSynchronisation.csproj.nuget.dgspec.json" />
+    <None Remove="PokerSynchronisation\obj\PokerSynchronisation.csproj.nuget.g.targets" />
+    <None Remove="PokerSynchronisation\obj\project.nuget.cache" />
+    <None Remove="PokerSynchronisation\obj\project.assets.json" />
+    <None Remove="PokerSynchronisation\obj\PokerSynchronisation.csproj.nuget.g.props" />
+    <None Remove="PokerSynchronisation\obj\Debug\net5.0\PokerSynchronisation.assets.cache" />
+    <None Remove="PokerSynchronisation\obj\Debug\net5.0\PokerSynchronisation.csprojAssemblyReference.cache" />
+  </ItemGroup>
 </Project>

@@ -5,11 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Network.csproj" />
+    <PackageReference Include="TexasHoldemGameEngine" Version="2.0.0" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="TexasHoldem.Logic">
-      <HintPath>..\..\..\..\..\Downloads\TexasHoldem.Logic.dll</HintPath>
+    <Reference Include="Network">
+      <HintPath>..\..\..\SocketNetworkTest\Socket Network Test Project\Assets\Packages\Network.dll</HintPath>
     </Reference>
   </ItemGroup>
 </Project>

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Network
+﻿namespace Network
 {
 	public class SingletonBase<T>
 		where T : SingletonBase<T>, new()

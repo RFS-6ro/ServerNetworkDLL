@@ -3,37 +3,71 @@ using Network;
 using TexasHoldem.Logic;
 using TexasHoldem.Logic.Players;
 
-namespace PokerSynchronisation.PacketsSending
+namespace PokerSynchronisation
 {
-	#region enum
-	//////////////////SERVER////////////////////
-	/// <summary>Sent from server to client.</summary>
-	public enum ServerPacketsToClient
+	#region enums
+	public static partial class ClientPacketsSend
 	{
-		welcome = 1,
-		turnApprovance,
-		spawnPlayer,
-		playerPosition,
-		playerRotation,
+		/// <summary>Sent from client to server.</summary>
+		public enum ClientPacketsToServer
+		{
+			welcomeReceived = 1,
 
-		template = 1000,
-		Dealer = 1001,
-		GiveCard = 1002,
-		ShowTableCard = 1003,
-		ShowOtherPlayerCard = 1004,
-		ShowOtherPlayerBet = 1005
+			template = 10,
+			makeTurn = 11,
+			ExitLobby = 12
+		}
 	}
-	//////////////////CLIENT////////////////////
-	/// <summary>Sent from client to server.</summary>
-	public enum ClientPacketsToServer
-	{
-		welcomeReceived = 1,
-		makeTurn,
-		playerMovement,
-		playerShoot,
-		playerThrowItem,
 
-		template = 1000
+	public static partial class ServerPacketsSend
+	{
+		/// <summary>Sent from server to client.</summary>
+		public enum ServerPacketsToClient
+		{
+			welcome = 1,
+
+			template = 10,
+			Dealer = 11,
+			GiveCard = 12,
+			ShowTableCard = 13,
+			ShowOtherPlayerCard = 14,
+			ShowOtherPlayerBet = 15,
+			WinAmount = 16,
+			CommonPokerPlayerStateSerialization = 17,
+			turnApprovance = 18
+		}
+	}
+
+	public static partial class ServerHandlesPackets
+	{
+		/// <summary>Sent from client to server.</summary>
+		public enum PacketsReceivedFromClient
+		{
+			welcomeReceived = 1,
+
+			template = 10,
+			makeTurn = 11,
+			ExitLobby = 12
+		}
+	}
+
+	public static partial class ClientHandlesPackets
+	{
+		/// <summary>Sent from server to client.</summary>
+		public enum PacketsReceivedFromServer
+		{
+			welcome = 1,
+
+			template = 10,
+			Dealer = 11,
+			GiveCard = 12,
+			ShowTableCard = 13,
+			ShowOtherPlayerCard = 14,
+			ShowOtherPlayerBet = 15,
+			WinAmount = 16,
+			CommonPokerPlayerStateSerialization = 17,
+			turnApprovance = 18
+		}
 	}
 	#endregion
 
@@ -103,7 +137,7 @@ namespace PokerSynchronisation.PacketsSending
 	{
 		public static void ExitLobby(int id, string message, Action<Packet> sendHandler)
 		{
-			using (Packet packet = new Packet((int)ClientPacketsToServer.makeTurn))
+			using (Packet packet = new Packet((int)ClientPacketsToServer.ExitLobby))
 			{
 				packet.Write(id);
 				packet.Write(message);
@@ -125,6 +159,10 @@ namespace PokerSynchronisation.PacketsSending
 				sendHandler(to, packet);
 			}
 		}
+	}
+
+	public static partial class ServerPacketsSend
+	{
 
 		public static void GiveCard(int to, int type, int suit, Action<int, Packet> sendHandler)
 		{
@@ -137,6 +175,10 @@ namespace PokerSynchronisation.PacketsSending
 				sendHandler(to, packet);
 			}
 		}
+	}
+
+	public static partial class ServerPacketsSend
+	{
 
 		public static void ShowTableCard(int to, int type, int suit, int index, Action<int, Packet> sendHandler)
 		{
@@ -150,6 +192,10 @@ namespace PokerSynchronisation.PacketsSending
 				sendHandler(to, packet);
 			}
 		}
+	}
+
+	public static partial class ServerPacketsSend
+	{
 
 		public static void ShowOtherPlayerCard(int to, int type1, int suit1, int type2, int suit2, int index, Action<int, Packet> sendHandler)
 		{
@@ -165,6 +211,10 @@ namespace PokerSynchronisation.PacketsSending
 				sendHandler(to, packet);
 			}
 		}
+	}
+
+	public static partial class ServerPacketsSend
+	{
 
 		public static void ShowOtherPlayerBet(int to, int amount, int index, Action<int, Packet> sendHandler)
 		{
@@ -177,6 +227,10 @@ namespace PokerSynchronisation.PacketsSending
 				sendHandler(to, packet);
 			}
 		}
+	}
+
+	public static partial class ServerPacketsSend
+	{
 
 		public static void ShowBank(int to, int bank, int index, Action<int, Packet> sendHandler)
 		{
@@ -190,36 +244,40 @@ namespace PokerSynchronisation.PacketsSending
 			}
 		}
 	}
-	#endregion
-	/*
-	#region Template
-	public static partial class ClientPacketsSend
-	{
-		public static void Template(int id, string name, Action<Packet> sendHandler)
-		{
-			using (Packet packet = new Packet((int)ClientPacketsToServer.template))
-			{
-				packet.Write(id);
-				packet.Write(name);
 
-				sendHandler(packet);
+	public static partial class ServerPacketsSend
+	{
+
+		public static void GiveWinAmount(int to, int bank, int index, Action<int, Packet> sendHandler)
+		{
+			using (Packet packet = new Packet((int)ServerPacketsToClient.WinAmount))
+			{
+				packet.Write(to);
+				packet.Write(bank);
+				packet.Write(index);
+
+				sendHandler(to, packet);
 			}
 		}
 	}
 
 	public static partial class ServerPacketsSend
 	{
-		public static void Template(int to, string message, Action<int, Packet> sendHandler)
+
+		public static void SetMoveableVariables(int to, int money, int currentlyInPot, int currentRoundBet, bool inHand, bool shouldPlayInRound, Action<int, Packet> sendHandler)
 		{
-			using (Packet packet = new Packet((int)ServerPacketsToClient.template))
+			using (Packet packet = new Packet((int)ServerPacketsToClient.CommonPokerPlayerStateSerialization))
 			{
 				packet.Write(to);
-				packet.Write(message);
+				packet.Write(money);
+				packet.Write(currentlyInPot);
+				packet.Write(currentRoundBet);
+				packet.Write(inHand);
+				packet.Write(shouldPlayInRound);
 
 				sendHandler(to, packet);
 			}
 		}
 	}
 	#endregion
-	*/
 }

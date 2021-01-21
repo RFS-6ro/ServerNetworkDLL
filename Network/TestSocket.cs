@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Sockets;
+using System.Threading;
 
 namespace Network
 {
@@ -7,7 +8,7 @@ namespace Network
 	{
 		public override LoggerBase _logger => throw new NotImplementedException();
 
-		public override void DisconnectClient()
+		protected override void DisconnectClient()
 		{
 			throw new NotImplementedException();
 		}
@@ -27,6 +28,37 @@ namespace Network
 		}
 	}
 
+	internal class TestSocket2 : UDPBase
+	{
+		public override LoggerBase _logger => throw new NotImplementedException();
+
+		public override void Connect(object connection)
+		{
+			throw new NotImplementedException();
+		}
+
+		public override void Disconnect()
+		{
+			throw new NotImplementedException();
+		}
+
+		public override void SendData(Packet packet)
+		{
+			throw new NotImplementedException();
+		}
+
+		protected override void DisconnectClient()
+		{
+			throw new NotImplementedException();
+		}
+
+		protected override void HandleData(byte[] _data)
+		{
+			throw new NotImplementedException();
+		}
+	}
+
+
 	internal class TestClient : IClientBase
 	{
 		int IClientBase.Id { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
@@ -35,7 +67,15 @@ namespace Network
 
 		void IClientBase.Disconnect()
 		{
+			Pool<Thread> threadPool = new Pool<Thread>(() => new Thread(g));//new ThreadStart(g)));
+
+
 			throw new NotImplementedException();
+		}
+
+		public void g()
+		{
+
 		}
 	}
 }
