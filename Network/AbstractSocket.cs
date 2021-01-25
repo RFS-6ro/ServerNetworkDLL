@@ -7,8 +7,6 @@ namespace Network
 
 		public abstract void SendData(Packet packet);
 
-		public abstract void ReceiveCallback(IAsyncResult result);
-
 		public abstract void Disconnect();
 	}
 }

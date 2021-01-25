@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 
@@ -22,7 +23,7 @@ namespace Network
 			throw new NotImplementedException();
 		}
 
-		protected override bool HandleReceivedData(byte[] data)
+		protected override void HandleData(int packetId, Packet packet)
 		{
 			throw new NotImplementedException();
 		}
@@ -52,7 +53,7 @@ namespace Network
 			throw new NotImplementedException();
 		}
 
-		protected override void HandleData(byte[] _data)
+		public override void HandleData(Packet _data)
 		{
 			throw new NotImplementedException();
 		}
@@ -65,7 +66,7 @@ namespace Network
 		TCPBase IClientBase.Tcp { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 		UDPBase IClientBase.Udp { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
-		void IClientBase.Disconnect()
+		public void Disconnect()
 		{
 			Pool<Thread> threadPool = new Pool<Thread>(() => new Thread(g));//new ThreadStart(g)));
 
@@ -75,7 +76,6 @@ namespace Network
 
 		public void g()
 		{
-
 		}
 	}
 }

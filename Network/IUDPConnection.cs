@@ -11,5 +11,11 @@ namespace Network
 		protected void UDPReceiveCallback(IAsyncResult _result);
 
 		public void SendUDPData(IPEndPoint _clientEndPoint, Packet _packet);
+
+		public void InitListener(int port)
+		{
+			_udpListener = new UdpClient(port);
+			_udpListener.BeginReceive(UDPReceiveCallback, null);
+		}
 	}
 }

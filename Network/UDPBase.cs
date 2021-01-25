@@ -13,28 +13,28 @@ namespace Network
 
 		public abstract void Connect(object connection);
 
-		public void ReceiveCallback(IAsyncResult result)
-		{
-			try
-			{
-				byte[] _data = Socket.EndReceive(result, ref EndPoint);
-				Socket.BeginReceive(ReceiveCallback, null);
+		//public void ReceiveCallback(IAsyncResult result)
+		//{
+		//	try
+		//	{
+		//		byte[] _data = Socket.EndReceive(result, ref EndPoint);
+		//		Socket.BeginReceive(ReceiveCallback, null);
 
-				if (_data.Length < 4)
-				{
-					DisconnectClient();
-					return;
-				}
+		//		if (_data.Length < 4)
+		//		{
+		//			DisconnectClient();
+		//			return;
+		//		}
 
-				HandleData(_data);
-			}
-			catch
-			{
-				Disconnect();
-			}
-		}
+		//		HandleData(_data);
+		//	}
+		//	catch
+		//	{
+		//		Disconnect();
+		//	}
+		//}
 
-		protected abstract void HandleData(byte[] _data);
+		public abstract void HandleData(Packet _data);
 
 		public abstract void SendData(Packet packet);
 

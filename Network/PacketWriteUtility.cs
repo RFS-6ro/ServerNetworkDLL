@@ -65,5 +65,12 @@ namespace Network
 			Write(value.Length); // Add the length of the string to the packet
 			_buffer.AddRange(Encoding.ASCII.GetBytes(value)); // Add the string itself
 		}
+		/// <summary>Adds a string to the packet.</summary>
+		/// <param name="value">The string to add.</param>
+		public void Write(ServerIdentifierData value)
+		{
+			Write(value.IpAddress);
+			Write(value.Port);
+		}
 	}
 }

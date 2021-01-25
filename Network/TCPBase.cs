@@ -31,7 +31,60 @@ namespace Network
 			}
 		}
 
-		protected abstract bool HandleReceivedData(byte[] data);
+		protected abstract void HandleData(int packetId, Packet packet);
+
+		protected bool HandleReceivedData(byte[] data)
+		{
+			int packetLength = 0;
+
+			_receivedPacket.SetBytes(data);
+
+			if (_receivedPacket.UnreadLength >= 4)
+			{
+				// If client's received data contains a packet
+				packetLength = _receivedPacket.ReadInt();
+				if (packetLength <= 0)
+				{
+					// If packet contains no data
+					return true; // Reset _receivedPacket instance to allow it to be reused
+				}
+			}
+
+			while (packetLength > 0 && packetLength <= _receivedPacket.UnreadLength)
+			{
+				// While packet contains data AND packet data length doesn't exceed the length of the packet we're reading
+				byte[] packetBytes = _receivedPacket.ReadBytes(packetLength);
+				IThreadManager.ExecuteOnMainThread(() =>
+				{
+					using (Packet packet = new Packet(packetBytes))
+					{
+						int packetId = packet.ReadInt();
+
+						HandleData(packetId, packet); // Call appropriate method to handle the packet
+													  //IServer.PacketHandlers[packetId](_id, packet);
+					}
+				});
+
+				packetLength = 0; // Reset packet length
+				if (_receivedPacket.UnreadLength >= 4)
+				{
+					// If client's received data contains another packet
+					packetLength = _receivedPacket.ReadInt();
+					if (packetLength <= 0)
+					{
+						// If packet contains no data
+						return true; // Reset _receivedPacket instance to allow it to be reused
+					}
+				}
+			}
+
+			if (packetLength <= 1)
+			{
+				return true; // Reset _receivedPacket instance to allow it to be reused
+			}
+
+			return false;
+		}
 
 		public void ReceiveCallback(IAsyncResult result)
 		{

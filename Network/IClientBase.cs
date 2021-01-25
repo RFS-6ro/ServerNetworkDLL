@@ -6,6 +6,6 @@
 		public TCPBase Tcp { get; set; }
 		public UDPBase Udp { get; set; }
 
-		protected void Disconnect();
+		public void Disconnect();
 	}
 }

@@ -173,5 +173,30 @@ namespace Network
 				throw new Exception("Could not read value of type 'string'!");
 			}
 		}
+
+		/// <summary>Reads a string from the packet.</summary>
+		/// <param name="moveReadPos">Whether or not to move the buffer's read position.</param>
+		public ServerIdentifierData ReadServerIdentifier(bool moveReadPos = true)
+		{
+			try
+			{
+				int length = ReadInt();
+				string address = Encoding.ASCII.GetString(_readableBuffer, _readPosition, length);
+
+				if (moveReadPos && address.Length > 0)
+				{
+					// If _moveReadPos is true string is not empty
+					_readPosition += length; // Increase readPos by the length of the string
+				}
+
+				int port = ReadInt();
+
+				return new ServerIdentifierData(address, port);
+			}
+			catch
+			{
+				throw new Exception("Could not read value of type 'ServerIdentifierData'!");
+			}
+		}
 	}
 }

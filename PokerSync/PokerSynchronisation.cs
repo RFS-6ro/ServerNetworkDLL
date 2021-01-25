@@ -11,11 +11,12 @@ namespace PokerSynchronisation
 		/// <summary>Sent from client to server.</summary>
 		public enum ClientPacketsToServer
 		{
-			welcomeReceived = 1,
+			WelcomeReceived = 1,
 
 			template = 10,
-			makeTurn = 11,
-			ExitLobby = 12
+			MakeTurn = 11,
+			ExitLobby = 12,
+			ConnectToLobby = 13,
 		}
 	}
 
@@ -24,7 +25,7 @@ namespace PokerSynchronisation
 		/// <summary>Sent from server to client.</summary>
 		public enum ServerPacketsToClient
 		{
-			welcome = 1,
+			Welcome = 1,
 
 			template = 10,
 			Dealer = 11,
@@ -34,39 +35,9 @@ namespace PokerSynchronisation
 			ShowOtherPlayerBet = 15,
 			WinAmount = 16,
 			CommonPokerPlayerStateSerialization = 17,
-			turnApprovance = 18
-		}
-	}
-
-	public static partial class ServerHandlesPackets
-	{
-		/// <summary>Sent from client to server.</summary>
-		public enum PacketsReceivedFromClient
-		{
-			welcomeReceived = 1,
-
-			template = 10,
-			makeTurn = 11,
-			ExitLobby = 12
-		}
-	}
-
-	public static partial class ClientHandlesPackets
-	{
-		/// <summary>Sent from server to client.</summary>
-		public enum PacketsReceivedFromServer
-		{
-			welcome = 1,
-
-			template = 10,
-			Dealer = 11,
-			GiveCard = 12,
-			ShowTableCard = 13,
-			ShowOtherPlayerCard = 14,
-			ShowOtherPlayerBet = 15,
-			WinAmount = 16,
-			CommonPokerPlayerStateSerialization = 17,
-			turnApprovance = 18
+			TurnApprovance = 18,
+			ConnectionServerAddress = 19,
+			StartTurn = 20,
 		}
 	}
 	#endregion
@@ -76,7 +47,7 @@ namespace PokerSynchronisation
 	{
 		public static void WelcomeReceived(int id, string name, Action<Packet> sendHandler)
 		{
-			using (Packet packet = new Packet((int)ClientPacketsToServer.welcomeReceived))
+			using (Packet packet = new Packet((int)ClientPacketsToServer.WelcomeReceived))
 			{
 				packet.Write(id);
 				packet.Write(name);
@@ -88,12 +59,23 @@ namespace PokerSynchronisation
 
 	public static partial class ServerPacketsSend
 	{
-		public static void Welcome(int to, GameRoundType type, Action<int, Packet> sendHandler)
+		public static void Welcome(int to, string message, Action<int, Packet> sendHandler)
 		{
-			using (Packet packet = new Packet((int)ServerPacketsToClient.welcome))
+			using (Packet packet = new Packet((int)ServerPacketsToClient.Welcome))
 			{
 				packet.Write(to);
-				packet.Write((int)type);
+				packet.Write(message);
+
+				sendHandler(to, packet);
+			}
+		}
+
+		public static void ConnectToOtherServer(int to, ServerIdentifierData data, Action<int, Packet> sendHandler)
+		{
+			using (Packet packet = new Packet((int)ServerPacketsToClient.ConnectionServerAddress))
+			{
+				packet.Write(to);
+				packet.Write(data);
 
 				sendHandler(to, packet);
 			}
@@ -106,7 +88,7 @@ namespace PokerSynchronisation
 	{
 		public static void MakeTurn(int id, PlayerActionType actionType, int raiseAmount, Action<Packet> sendHandler)
 		{
-			using (Packet packet = new Packet((int)ClientPacketsToServer.makeTurn))
+			using (Packet packet = new Packet((int)ClientPacketsToServer.MakeTurn))
 			{
 				packet.Write(id);
 				packet.Write((int)actionType);
@@ -121,10 +103,21 @@ namespace PokerSynchronisation
 	{
 		public static void Approvance(int to, bool result, Action<int, Packet> sendHandler)
 		{
-			using (Packet packet = new Packet((int)ServerPacketsToClient.turnApprovance))
+			using (Packet packet = new Packet((int)ServerPacketsToClient.TurnApprovance))
 			{
 				packet.Write(to);
 				packet.Write(result);
+
+				sendHandler(to, packet);
+			}
+		}
+
+		public static void StartTurn(int to, GameRoundType type, Action<int, Packet> sendHandler)
+		{
+			using (Packet packet = new Packet((int)ServerPacketsToClient.StartTurn))
+			{
+				packet.Write(to);
+				packet.Write((int)type);
 
 				sendHandler(to, packet);
 			}
