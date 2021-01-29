@@ -1,7 +1,5 @@
 ﻿using System;
 using Network;
-using TexasHoldem.Logic;
-using TexasHoldem.Logic.Players;
 
 namespace PokerSynchronisation
 {
@@ -38,6 +36,9 @@ namespace PokerSynchronisation
 			TurnApprovance = 18,
 			ConnectionServerAddress = 19,
 			StartTurn = 20,
+			ShowBank = 21,
+			ConnectionToLobbyApprovance = 22,
+			ShowMoney
 		}
 	}
 	#endregion
@@ -86,7 +87,7 @@ namespace PokerSynchronisation
 	#region Turn
 	public static partial class ClientPacketsSend
 	{
-		public static void MakeTurn(int id, PlayerActionType actionType, int raiseAmount, Action<Packet> sendHandler)
+		public static void MakeTurn(int id, TurnType actionType, int raiseAmount, Action<Packet> sendHandler)
 		{
 			using (Packet packet = new Packet((int)ClientPacketsToServer.MakeTurn))
 			{
@@ -142,12 +143,12 @@ namespace PokerSynchronisation
 
 	public static partial class ServerPacketsSend
 	{
-		public static void ShowDealerButton(int to, int index, Action<int, Packet> sendHandler)
+		public static void ShowDealerButton(int to, int offset, Action<int, Packet> sendHandler)
 		{
 			using (Packet packet = new Packet((int)ServerPacketsToClient.Dealer))
 			{
 				packet.Write(to);
-				packet.Write(index);
+				packet.Write(offset);
 
 				sendHandler(to, packet);
 			}
@@ -157,13 +158,15 @@ namespace PokerSynchronisation
 	public static partial class ServerPacketsSend
 	{
 
-		public static void GiveCard(int to, int type, int suit, Action<int, Packet> sendHandler)
+		public static void GiveCards(int to, int type1, int suit1, int type2, int suit2, Action<int, Packet> sendHandler)
 		{
 			using (Packet packet = new Packet((int)ServerPacketsToClient.GiveCard))
 			{
 				packet.Write(to);
-				packet.Write(type);
-				packet.Write(suit);
+				packet.Write(type1);
+				packet.Write(suit1);
+				packet.Write(type2);
+				packet.Write(suit2);
 
 				sendHandler(to, packet);
 			}
@@ -173,14 +176,22 @@ namespace PokerSynchronisation
 	public static partial class ServerPacketsSend
 	{
 
-		public static void ShowTableCard(int to, int type, int suit, int index, Action<int, Packet> sendHandler)
+		public static void ShowTableCard(int to, int[] types, int[] suits, int[] indexes, Action<int, Packet> sendHandler)
 		{
 			using (Packet packet = new Packet((int)ServerPacketsToClient.ShowTableCard))
 			{
 				packet.Write(to);
-				packet.Write(type);
-				packet.Write(suit);
-				packet.Write(index);
+				packet.Write(types.Length);
+				for (int i = 0; i < types.Length; i++)
+				{
+					int type = types[i];
+					int suit = suits[i];
+					int index = indexes[i];
+
+					packet.Write(type);
+					packet.Write(suit);
+					packet.Write(index);
+				}
 
 				sendHandler(to, packet);
 			}
@@ -190,7 +201,7 @@ namespace PokerSynchronisation
 	public static partial class ServerPacketsSend
 	{
 
-		public static void ShowOtherPlayerCard(int to, int type1, int suit1, int type2, int suit2, int index, Action<int, Packet> sendHandler)
+		public static void ShowOtherPlayerCard(int to, int type1, int suit1, int type2, int suit2, int offset, Action<int, Packet> sendHandler)
 		{
 			using (Packet packet = new Packet((int)ServerPacketsToClient.ShowOtherPlayerCard))
 			{
@@ -199,7 +210,7 @@ namespace PokerSynchronisation
 				packet.Write(suit1);
 				packet.Write(type2);
 				packet.Write(suit2);
-				packet.Write(index);
+				packet.Write(offset);
 
 				sendHandler(to, packet);
 			}
@@ -209,13 +220,13 @@ namespace PokerSynchronisation
 	public static partial class ServerPacketsSend
 	{
 
-		public static void ShowOtherPlayerBet(int to, int amount, int index, Action<int, Packet> sendHandler)
+		public static void ShowOtherPlayerBet(int to, int amount, int offset, Action<int, Packet> sendHandler)
 		{
 			using (Packet packet = new Packet((int)ServerPacketsToClient.ShowOtherPlayerBet))
 			{
 				packet.Write(to);
 				packet.Write(amount);
-				packet.Write(index);
+				packet.Write(offset);
 
 				sendHandler(to, packet);
 			}
@@ -225,13 +236,12 @@ namespace PokerSynchronisation
 	public static partial class ServerPacketsSend
 	{
 
-		public static void ShowBank(int to, int bank, int index, Action<int, Packet> sendHandler)
+		public static void ShowBank(int to, int bank, Action<int, Packet> sendHandler)
 		{
 			using (Packet packet = new Packet((int)ServerPacketsToClient.ShowTableCard))
 			{
 				packet.Write(to);
 				packet.Write(bank);
-				packet.Write(index);
 
 				sendHandler(to, packet);
 			}
@@ -241,12 +251,11 @@ namespace PokerSynchronisation
 	public static partial class ServerPacketsSend
 	{
 
-		public static void GiveWinAmount(int to, int bank, int index, Action<int, Packet> sendHandler)
+		public static void GiveWinAmount(int to, int index, Action<int, Packet> sendHandler)
 		{
 			using (Packet packet = new Packet((int)ServerPacketsToClient.WinAmount))
 			{
 				packet.Write(to);
-				packet.Write(bank);
 				packet.Write(index);
 
 				sendHandler(to, packet);
@@ -257,7 +266,7 @@ namespace PokerSynchronisation
 	public static partial class ServerPacketsSend
 	{
 
-		public static void SetMoveableVariables(int to, int money, int currentlyInPot, int currentRoundBet, bool inHand, bool shouldPlayInRound, Action<int, Packet> sendHandler)
+		public static void SetMoveableVariables(int to, int money, int currentlyInPot, int currentRoundBet, bool inHand, bool shouldPlayInRound, int smallBlind, Action<int, Packet> sendHandler)
 		{
 			using (Packet packet = new Packet((int)ServerPacketsToClient.CommonPokerPlayerStateSerialization))
 			{
@@ -267,6 +276,7 @@ namespace PokerSynchronisation
 				packet.Write(currentRoundBet);
 				packet.Write(inHand);
 				packet.Write(shouldPlayInRound);
+				packet.Write(smallBlind);
 
 				sendHandler(to, packet);
 			}
