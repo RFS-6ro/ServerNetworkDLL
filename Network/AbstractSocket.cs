@@ -1,9 +1,9 @@
 ﻿using System;
 namespace Network
 {
-	public interface AbstractSocket<T> : INeedLogger
+	public abstract class AbstractSocket<T>
 	{
-		public abstract T Socket { get; }
+		public T Socket { get; protected set; }
 
 		public abstract void SendData(Packet packet);
 

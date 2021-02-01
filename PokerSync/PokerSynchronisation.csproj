@@ -1,15 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <Reference Include="Network">
-      <HintPath>..\..\..\SocketNetworkTest\Socket Network Test Project\Assets\Packages\Network.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Network\Network.csproj" />
-  </ItemGroup>
+    <PropertyGroup>
+        <TargetFramework>netcoreapp2.0</TargetFramework>
+        <RuntimeFrameworkVersion>2.0.0</RuntimeFrameworkVersion>
+        <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
+    </PropertyGroup>
+    <ItemGroup>
+        <Reference Include="Network">
+            <HintPath>..\..\..\SocketNetworkTest\Socket Network Test Project\Assets\Packages\Network.dll</HintPath>
+        </Reference>
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Network\Network.csproj" />
+    </ItemGroup>
 </Project>

@@ -6,7 +6,6 @@ namespace Network
 {
 	public abstract class UDPBase : AbstractSocket<UdpClient>
 	{
-		public UdpClient Socket { get; protected set; }
 		public IPEndPoint EndPoint;
 
 		public abstract LoggerBase _logger { get; }
@@ -35,10 +34,6 @@ namespace Network
 		//}
 
 		public abstract void HandleData(Packet _data);
-
-		public abstract void SendData(Packet packet);
-
-		public abstract void Disconnect();
 
 		protected abstract void DisconnectClient();
 	}

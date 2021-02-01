@@ -4,13 +4,13 @@ using System.Net.Sockets;
 
 namespace Network
 {
-	public interface ITCPConnection
+	public abstract class TCPConnection
 	{
 		protected static TcpListener _tcpListener;
 
-		protected void TCPConnectCallback(IAsyncResult _result);
+		protected abstract void TCPConnectCallback(IAsyncResult _result);
 
-		void InitListener(IPAddress adress, int port)
+		protected void InitListener(IPAddress adress, int port)
 		{
 			_tcpListener = new TcpListener(adress, port);
 			_tcpListener.Start();

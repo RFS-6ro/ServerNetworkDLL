@@ -4,11 +4,11 @@ namespace Network
 {
 	public interface LoggerBase
 	{
-		public void PrintSuccess(string message);
+		void PrintSuccess(string message);
 
-		public void PrintWarning(string message);
+		void PrintWarning(string message);
 
-		public void PrintError(string message);
+		void PrintError(string message);
 
 	}
 }

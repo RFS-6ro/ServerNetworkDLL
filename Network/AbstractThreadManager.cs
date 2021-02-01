@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Network
 {
-	public interface IThreadManager
+	public abstract class AbstractThreadManager
 	{
 		private static readonly List<Action> executeOnMainThread = new List<Action>();
 		private static readonly List<Action> executeCopiedOnMainThread = new List<Action>();

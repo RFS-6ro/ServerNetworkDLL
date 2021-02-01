@@ -1,4 +1,6 @@
-﻿namespace Network
+﻿using System;
+
+namespace Network
 {
 	public class SingletonBase<T>
 		where T : SingletonBase<T>, new()
@@ -19,5 +21,11 @@
 		}
 
 		protected SingletonBase() { }
+
+		public void Destroy()
+		{
+			_instance = null;
+			GC.SuppressFinalize(this);
+		}
 	}
 }

@@ -4,13 +4,13 @@ using System.Net.Sockets;
 
 namespace Network
 {
-	public interface IUDPConnection
+	public abstract class UDPConnection
 	{
 		protected static UdpClient _udpListener;
 
-		protected void UDPReceiveCallback(IAsyncResult _result);
+		protected abstract void UDPReceiveCallback(IAsyncResult _result);
 
-		public void SendUDPData(IPEndPoint _clientEndPoint, Packet _packet);
+		public abstract void SendUDPData(IPEndPoint _clientEndPoint, Packet _packet);
 
 		public void InitListener(int port)
 		{

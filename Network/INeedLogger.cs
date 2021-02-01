@@ -2,6 +2,6 @@
 {
 	public interface INeedLogger
 	{
-		abstract LoggerBase _logger { get; }
+		LoggerBase _logger { get; }
 	}
 }
