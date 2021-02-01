@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Network;
 
 namespace PokerSynchronisation
@@ -15,6 +16,7 @@ namespace PokerSynchronisation
 			MakeTurn = 11,
 			ExitLobby = 12,
 			ConnectToLobby = 13,
+			AskLobbiesList = 14
 		}
 	}
 
@@ -38,7 +40,8 @@ namespace PokerSynchronisation
 			StartTurn = 20,
 			ShowBank = 21,
 			ConnectionToLobbyApprovance = 22,
-			ShowMoney
+			ShowMoney = 23,
+			LobbyList = 24
 		}
 	}
 	#endregion
@@ -277,6 +280,29 @@ namespace PokerSynchronisation
 				packet.Write(inHand);
 				packet.Write(shouldPlayInRound);
 				packet.Write(smallBlind);
+
+				sendHandler(to, packet);
+			}
+		}
+	}
+
+	public static partial class ServerPacketsSend
+	{
+
+		public static void SendLobbyList(int to, List<LobbyIdentifierData> lobbies, Action<int, Packet> sendHandler)
+		{
+			using (Packet packet = new Packet((int)ServerPacketsToClient.CommonPokerPlayerStateSerialization))
+			{
+				packet.Write(to);
+				packet.Write(lobbies.Count);
+
+				foreach (var lobby in lobbies)
+				{
+					packet.Write(lobby.Name);
+					packet.Write(lobby.NumberOfPlayers);
+					packet.Write(lobby.SmallBlind);
+					packet.Write(lobby.BuyIn);
+				}
 
 				sendHandler(to, packet);
 			}
