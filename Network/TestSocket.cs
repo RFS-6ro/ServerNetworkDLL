@@ -27,11 +27,6 @@ namespace Network
 		{
 			throw new NotImplementedException();
 		}
-
-		public override void SendData(Packet packet)
-		{
-			throw new NotImplementedException();
-		}
 	}
 
 	internal class TestSocket2 : UDPBase

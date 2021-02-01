@@ -2,10 +2,10 @@
 {
 	public interface IClientBase
 	{
-		int Id { get; set; }
-		TCPBase Tcp { get; set; }
-		UDPBase Udp { get; set; }
+		public int Id { get; set; }
+		public TCPBase Tcp { get; set; }
+		public UDPBase Udp { get; set; }
 
-		void Disconnect();
+		public void Disconnect();
 	}
 }

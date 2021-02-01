@@ -3,8 +3,10 @@ using System.Net.Sockets;
 
 namespace Network
 {
-	public abstract class TCPBase : AbstractSocket<TcpClient>, INeedLogger
+	public abstract class TCPBase : AbstractSocket<TcpClient>
 	{
+		public TcpClient Socket { get; protected set; }
+
 		protected NetworkStream _stream;
 		protected Packet _receivedPacket;
 		protected byte[] _receiveBuffer;
@@ -13,7 +15,7 @@ namespace Network
 
 		public abstract void Connect(TcpClient socket = default);
 
-		public override void SendData(Packet packet)
+		public void SendData(Packet packet)
 		{
 			try
 			{
@@ -52,7 +54,7 @@ namespace Network
 			{
 				// While packet contains data AND packet data length doesn't exceed the length of the packet we're reading
 				byte[] packetBytes = _receivedPacket.ReadBytes(packetLength);
-				AbstractThreadManager.ExecuteOnMainThread(() =>
+				IThreadManager.ExecuteOnMainThread(() =>
 				{
 					using (Packet packet = new Packet(packetBytes))
 					{
@@ -115,6 +117,8 @@ namespace Network
 				Disconnect();
 			}
 		}
+
+		public abstract void Disconnect();
 
 		protected abstract void DisconnectClient();
 	}

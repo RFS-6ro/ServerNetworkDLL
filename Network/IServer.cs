@@ -2,7 +2,7 @@
 
 namespace Network
 {
-	public abstract class AbstractServer
+	public interface IServer
 	{
 		public static int MaxPlayers { get; protected set; }
 		public static int Port { get; protected set; }
@@ -10,8 +10,8 @@ namespace Network
 		public delegate void PacketHandler(int _fromClient, Packet _packet);
 		public static Dictionary<int, PacketHandler> PacketHandlers;
 
-		public abstract void Start(int _maxPlayers, int _port);
+		public void Start(int _maxPlayers, int _port);
 
-		protected abstract void InitializeServerData();
+		public void InitializeServerData();
 	}
 }
