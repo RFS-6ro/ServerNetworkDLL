@@ -160,7 +160,6 @@ namespace PokerSynchronisation
 
 	public static partial class ServerPacketsSend
 	{
-
 		public static void GiveCards(int to, int type1, int suit1, int type2, int suit2, Action<int, Packet> sendHandler)
 		{
 			using (Packet packet = new Packet((int)ServerPacketsToClient.GiveCard))
@@ -178,7 +177,6 @@ namespace PokerSynchronisation
 
 	public static partial class ServerPacketsSend
 	{
-
 		public static void ShowTableCard(int to, int[] types, int[] suits, int[] indexes, Action<int, Packet> sendHandler)
 		{
 			using (Packet packet = new Packet((int)ServerPacketsToClient.ShowTableCard))
@@ -203,7 +201,6 @@ namespace PokerSynchronisation
 
 	public static partial class ServerPacketsSend
 	{
-
 		public static void ShowOtherPlayerCard(int to, int type1, int suit1, int type2, int suit2, int offset, Action<int, Packet> sendHandler)
 		{
 			using (Packet packet = new Packet((int)ServerPacketsToClient.ShowOtherPlayerCard))
@@ -222,13 +219,13 @@ namespace PokerSynchronisation
 
 	public static partial class ServerPacketsSend
 	{
-
-		public static void ShowOtherPlayerBet(int to, int amount, int offset, Action<int, Packet> sendHandler)
+		public static void ShowOtherPlayerBet(int to, int amount, int opponentsId, int offset, Action<int, Packet> sendHandler)
 		{
 			using (Packet packet = new Packet((int)ServerPacketsToClient.ShowOtherPlayerBet))
 			{
 				packet.Write(to);
 				packet.Write(amount);
+				packet.Write(opponentsId);
 				packet.Write(offset);
 
 				sendHandler(to, packet);
@@ -238,7 +235,22 @@ namespace PokerSynchronisation
 
 	public static partial class ServerPacketsSend
 	{
+		public static void ShowMoney(int to, int amount, int opponentsId, int offset, Action<int, Packet> sendHandler)
+		{
+			using (Packet packet = new Packet((int)ServerPacketsToClient.ShowMoney))
+			{
+				packet.Write(to);
+				packet.Write(amount);
+				packet.Write(opponentsId);
+				packet.Write(offset);
 
+				sendHandler(to, packet);
+			}
+		}
+	}
+
+	public static partial class ServerPacketsSend
+	{
 		public static void ShowBank(int to, int bank, Action<int, Packet> sendHandler)
 		{
 			using (Packet packet = new Packet((int)ServerPacketsToClient.ShowTableCard))
@@ -254,12 +266,13 @@ namespace PokerSynchronisation
 	public static partial class ServerPacketsSend
 	{
 
-		public static void GiveWinAmount(int to, int index, Action<int, Packet> sendHandler)
+		public static void GiveWinAmount(int to, int index, int offset, Action<int, Packet> sendHandler)
 		{
 			using (Packet packet = new Packet((int)ServerPacketsToClient.WinAmount))
 			{
 				packet.Write(to);
 				packet.Write(index);
+				packet.Write(offset);
 
 				sendHandler(to, packet);
 			}
@@ -268,7 +281,6 @@ namespace PokerSynchronisation
 
 	public static partial class ServerPacketsSend
 	{
-
 		public static void SetMoveableVariables(int to, int money, int currentlyInPot, int currentRoundBet, bool inHand, bool shouldPlayInRound, int smallBlind, Action<int, Packet> sendHandler)
 		{
 			using (Packet packet = new Packet((int)ServerPacketsToClient.CommonPokerPlayerStateSerialization))
@@ -288,7 +300,6 @@ namespace PokerSynchronisation
 
 	public static partial class ServerPacketsSend
 	{
-
 		public static void SendLobbyList(int to, List<LobbyIdentifierData> lobbies, Action<int, Packet> sendHandler)
 		{
 			using (Packet packet = new Packet((int)ServerPacketsToClient.CommonPokerPlayerStateSerialization))
@@ -308,5 +319,64 @@ namespace PokerSynchronisation
 			}
 		}
 	}
+
+	public static partial class ServerPacketsSend
+	{
+		public static void ConnectionToLobbyApprovance(int to, LobbyIdentifierData lobby, Action<int, Packet> sendHandler)
+		{
+			using (Packet packet = new Packet((int)ServerPacketsToClient.ConnectionToLobbyApprovance))
+			{
+				packet.Write(to);
+				packet.Write(lobby.Name);
+				packet.Write(lobby.NumberOfPlayers);
+				packet.Write(lobby.SmallBlind);
+				packet.Write(lobby.BuyIn);
+
+				sendHandler(to, packet);
+			}
+		}
+
+		public static void ConnectionToLobbyApprovance(int to, string message, Action<int, Packet> sendHandler)
+		{
+			using (Packet packet = new Packet((int)ServerPacketsToClient.ConnectionToLobbyApprovance))
+			{
+				packet.Write(to);
+				packet.Write(message);
+
+				sendHandler(to, packet);
+			}
+		}
+	}
+
+	public static partial class ServerPacketsSend
+	{
+		public static void SendNewConnectionToLobby(int to, int otherId, string name, Action<int, Packet> sendHandler)
+		{
+			using (Packet packet = new Packet((int)ServerPacketsToClient.ShowTableCard))
+			{
+				packet.Write(to);
+				packet.Write(otherId);
+				packet.Write(name);
+
+				sendHandler(to, packet);
+			}
+		}
+	}
+
+	public static partial class ServerPacketsSend
+	{
+		public static void SendFullLobbyInformation<T>(int to, int otherId, T lobbyData, Action<int, Packet> sendHandler) where T : BasePaketSerialisationClass
+		{
+			using (Packet packet = new Packet((int)ServerPacketsToClient.ShowTableCard))
+			{
+				packet.Write(to);
+				packet.Write(otherId);
+				packet.Write(lobbyData.ToByteArray());
+
+				sendHandler(to, packet);
+			}
+		}
+	}
+
 	#endregion
 }
