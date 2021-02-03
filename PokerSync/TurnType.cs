@@ -1,5 +1,4 @@
-﻿using System;
-namespace PokerSynchronisation
+﻿namespace PokerSynchronisation
 {
 	public enum TurnType
 	{
