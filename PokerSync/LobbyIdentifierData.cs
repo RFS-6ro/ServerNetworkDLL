@@ -9,5 +9,13 @@
 		public int SmallBlind { get; set; }
 
 		public int BuyIn { get; set; }
+
+		public LobbyIdentifierData(string name, int numberOfPlayers, int smallBlind, int buyIn)
+		{
+			Name = name;
+			NumberOfPlayers = numberOfPlayers;
+			SmallBlind = smallBlind;
+			BuyIn = buyIn;
+		}
 	}
 }

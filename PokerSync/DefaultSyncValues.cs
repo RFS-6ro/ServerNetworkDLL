@@ -2,7 +2,7 @@
 {
 	public static class DefaultSyncValues
 	{
-		public const string EventHandlerName = "Default Event";
+		public const string LobbyName = "DefaultLobby";
 
 		public const int LobbyWaitingLimit = 3 * 60 * 1000;
 
