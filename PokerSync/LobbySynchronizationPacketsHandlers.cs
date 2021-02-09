@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using Network;
+using TexasHoldem.Logic.Cards;
 
 namespace PokerSynchronisation
 {
@@ -67,11 +69,15 @@ namespace PokerSynchronisation
 			StartTurn = 14,
 			ShowBank = 15,
 			ConnectionToLobbyApprovance = 16,
-			ShowMoney = 17,
+			ShowMoneyLeft = 17,
 			Dealer = 18,
 			GiveCard = 19,
 			ShowTableCard = 20,
 			WinAmount = 21,
+			ShowPlayerBet = 22,
+			EndTurn = 23,
+			CollectAllBets = 24,
+			ShowAllCards = 25,
 		}
 
 		public static void WelcomeReceived(int lobbyId, string message, Action<Packet> sendHandler)
@@ -109,14 +115,13 @@ namespace PokerSynchronisation
 			}
 		}
 
-		public static void PlayerStateAtStartOfRound(int lobbyId, int toPlayer, int money, int currentRoundBet, int currentlyInPot, Action<Packet> sendHandler)
+		public static void PlayerStateAtStartOfRound(int lobbyId, int toPlayer, int money, int currentlyInPot, Action<Packet> sendHandler)
 		{
 			using (Packet packet = new Packet((int)LobbyPacketsToGameServer.PlayerStateAtStartOfRound))
 			{
 				packet.Write(lobbyId);
 				packet.Write(toPlayer);
 				packet.Write(money);
-				packet.Write(currentRoundBet);
 				packet.Write(currentlyInPot);
 
 				sendHandler(packet);
@@ -155,11 +160,12 @@ namespace PokerSynchronisation
 			}
 		}
 
-		public static void ShowMoney(int lobbyId, int amount, Action<Packet> sendHandler)
+		public static void ShowMoneyLeft(int lobbyId, int playerId, int amount, Action<Packet> sendHandler)
 		{
-			using (Packet packet = new Packet((int)LobbyPacketsToGameServer.ShowMoney))
+			using (Packet packet = new Packet((int)LobbyPacketsToGameServer.ShowMoneyLeft))
 			{
 				packet.Write(lobbyId);
+				packet.Write(playerId);
 				packet.Write(amount);
 
 				sendHandler(packet);
@@ -177,16 +183,14 @@ namespace PokerSynchronisation
 			}
 		}
 
-		public static void GiveCards(int lobbyId, int playerId, int type1, int suit1, int type2, int suit2, Action<Packet> sendHandler)
+		public static void GiveCard(int lobbyId, int playerId, int type, int suit, Action<Packet> sendHandler)
 		{
 			using (Packet packet = new Packet((int)LobbyPacketsToGameServer.GiveCard))
 			{
 				packet.Write(lobbyId);
 				packet.Write(playerId);
-				packet.Write(type1);
-				packet.Write(suit1);
-				packet.Write(type2);
-				packet.Write(suit2);
+				packet.Write(type);
+				packet.Write(suit);
 
 				sendHandler(packet);
 			}
@@ -223,6 +227,62 @@ namespace PokerSynchronisation
 				packet.Write(amount);
 
 				sendHandler(packet);
+			}
+		}
+
+		public static void ShowPlayerBet(int lobbyId, int playerId, int betAmount, Action<Packet> sendHandler)
+		{
+			using (Packet packet = new Packet((int)LobbyPacketsToGameServer.ShowPlayerBet))
+			{
+				packet.Write(lobbyId);
+				packet.Write(playerId);
+				packet.Write(betAmount);
+
+				sendHandler(packet);
+			}
+		}
+
+		public static void EndTurn(int lobbyId, int playerId, Action<Packet> sendHandler)
+		{
+			using (Packet packet = new Packet((int)LobbyPacketsToGameServer.EndTurn))
+			{
+				packet.Write(lobbyId);
+				packet.Write(playerId);
+
+				sendHandler(packet);
+			}
+		}
+
+		public static void CollectAllBets(int lobbyId, Action<Packet> sendHandler)
+		{
+			using (Packet packet = new Packet((int)LobbyPacketsToGameServer.CollectAllBets))
+			{
+				packet.Write(lobbyId);
+
+				sendHandler(packet);
+			}
+		}
+
+		public static void ShowAllCards(int lobbyId, List<Card> firstCards, List<Card> secondCards, List<int> playersOrderIds, Action<Packet> sendHandler)
+		{
+			using (Packet packet = new Packet((int)LobbyPacketsToGameServer.ShowAllCards))
+			{
+				packet.Write(lobbyId);
+
+				if (firstCards.Count == secondCards.Count &&
+					firstCards.Count == playersOrderIds.Count)
+				{
+					for (int i = 0; i < playersOrderIds.Count; i++)
+					{
+						packet.Write(playersOrderIds[i]);
+						packet.Write((int)firstCards[i].Type);
+						packet.Write((int)firstCards[i].Suit);
+						packet.Write((int)secondCards[i].Type);
+						packet.Write((int)secondCards[i].Suit);
+					}
+
+					sendHandler(packet);
+				}
 			}
 		}
 	}

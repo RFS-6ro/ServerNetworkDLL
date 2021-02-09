@@ -10,13 +10,13 @@ namespace PokerSynchronisation
 		/// <summary>Sent from client to server.</summary>
 		public enum ClientPacketsToServer
 		{
-			WelcomeReceived = 1,
+			WelcomeReceived = 1,        //
 
 			template = 10,
-			MakeTurn = 11,
-			ExitLobby = 12,
-			ConnectToLobby = 13,
-			AskLobbiesList = 14
+			MakeTurn = 11,              //
+			ExitLobby = 12,             //
+			ConnectToLobby = 13,        //
+			AskLobbiesList = 14         //
 		}
 	}
 
@@ -25,26 +25,26 @@ namespace PokerSynchronisation
 		/// <summary>Sent from server to client.</summary>
 		public enum ServerPacketsToClient
 		{
-			Welcome = 1,
+			Welcome = 1,                            //sends server id to player
 
 			template = 10,
-			Dealer = 11,
-			GiveCard = 12,
-			ShowTableCard = 13,
-			ShowOtherPlayerCard = 14,
-			ShowOtherPlayerBet = 15,
-			WinAmount = 16,
-			SetMoveableVariables = 17,
-			TurnApprovance = 18,
-			ConnectionServerAddress = 19,
-			StartTurn = 20,
-			ShowBank = 21,
-			ConnectionToLobbyApprovance = 22,
-			ShowMoney = 23,
-			LobbyList = 24,
-			SendLobbyData = 25,
-			SendPlayerActionToLobbyPlayers = 26,
-			CustomData = 27
+			Dealer = 11,                            //sends dealer's server id
+			GiveCard = 12,                          //
+			ShowTableCard = 13,                     //
+			ShowOtherPlayerCard = 14,               //
+			ShowOtherPlayerBet = 15,                //
+			WinAmount = 16,                         //
+			SetMoveableVariables = 17,              //
+			TurnApprovance = 18,                    //
+			ConnectionServerAddress = 19,           //
+			StartTurn = 20,                         //
+			ShowBank = 21,                          //
+			ConnectionToLobbyApprovance = 22,       //
+			ShowMoney = 23,                         //
+			LobbyList = 24,                         //
+			SendLobbyData = 25,                     //
+			SendPlayerActionToLobbyPlayers = 26,    //
+			CustomData = 27                         //
 		}
 	}
 	#endregion
@@ -120,12 +120,12 @@ namespace PokerSynchronisation
 			}
 		}
 
-		public static void ShowDealerButton(int to, int offset, Action<int, Packet> sendHandler)
+		public static void ShowDealerButton(int to, int dealerId, Action<int, Packet> sendHandler)
 		{
 			using (Packet packet = new Packet((int)ServerPacketsToClient.Dealer))
 			{
 				packet.Write(to);
-				packet.Write(offset);
+				packet.Write(dealerId);
 
 				sendHandler(to, packet);
 			}
