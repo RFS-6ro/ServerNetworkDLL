@@ -1,11 +1,9 @@
 ﻿namespace PokerSynchronisation
 {
-	public struct LobbySeatData
+	public class LobbySeatData
 	{
-		public int PlayerId { get; set; }
+		public int PlayerID { get; set; }
 
-		public string Name { get; set; }
-
-		public int Offset { get; set; }
+		public string PlayerName { get; set; }
 	}
 }

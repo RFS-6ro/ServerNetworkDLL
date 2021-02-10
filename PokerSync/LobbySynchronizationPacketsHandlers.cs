@@ -14,45 +14,65 @@ namespace PokerSynchronisation
 			PlayerConnect = 11,
 			PlayerDisconnect = 12,
 			PlayerTurn = 13,
+			PlayerReadyStateChanged = 14,
 		}
 
-		public static void Welcome(int id, Action<int, Packet> sendHandler)
+		public static void Welcome(int lobbyId, string message, Action<int, Packet> sendHandler)
 		{
 			using (Packet packet = new Packet((int)GameServerToLobbyPackets.Welcome))
 			{
-				packet.Write(id);
+				packet.Write(lobbyId);
+				packet.Write(message);
 
-				sendHandler(id, packet);
+				sendHandler(lobbyId, packet);
 			}
 		}
 
-		public static void PlayerConnect(int id, Action<int, Packet> sendHandler)
+		public static void PlayerConnect(int lobbyId, int playerId, string playerName, Action<int, Packet> sendHandler)
 		{
 			using (Packet packet = new Packet((int)GameServerToLobbyPackets.PlayerConnect))
 			{
-				packet.Write(id);
+				packet.Write(lobbyId);
+				packet.Write(playerId);
+				packet.Write(playerName);
 
-				sendHandler(id, packet);
+				sendHandler(lobbyId, packet);
 			}
 		}
 
-		public static void PlayerDisconnect(int id, Action<int, Packet> sendHandler)
+		public static void PlayerDisconnect(int lobbyId, int playerId, Action<int, Packet> sendHandler)
 		{
 			using (Packet packet = new Packet((int)GameServerToLobbyPackets.PlayerDisconnect))
 			{
-				packet.Write(id);
+				packet.Write(lobbyId);
+				packet.Write(playerId);
 
-				sendHandler(id, packet);
+				sendHandler(lobbyId, packet);
 			}
 		}
 
-		public static void PlayerTurn(int id, Action<int, Packet> sendHandler)
+		public static void PlayerTurn(int id, int playerId, TurnType turn, int raiseAmount, Action<int, Packet> sendHandler)
 		{
 			using (Packet packet = new Packet((int)GameServerToLobbyPackets.PlayerTurn))
 			{
 				packet.Write(id);
+				packet.Write(playerId);
+				packet.Write((int)turn);
+				packet.Write(raiseAmount);
 
 				sendHandler(id, packet);
+			}
+		}
+
+		public static void PlayerReadyStateChanged(int lobbyId, int playerId, bool isReady, Action<int, Packet> sendHandler)
+		{
+			using (Packet packet = new Packet((int)GameServerToLobbyPackets.PlayerReadyStateChanged))
+			{
+				packet.Write(lobbyId);
+				packet.Write(playerId);
+				packet.Write(isReady);
+
+				sendHandler(lobbyId, packet);
 			}
 		}
 	}
@@ -80,18 +100,18 @@ namespace PokerSynchronisation
 			ShowAllCards = 25,
 		}
 
-		public static void WelcomeReceived(int lobbyId, string message, Action<Packet> sendHandler)
+		public static void WelcomeReceived(int lobbyId, string lobbyName, Action<Packet> sendHandler)
 		{
 			using (Packet packet = new Packet((int)LobbyPacketsToGameServer.WelcomeReceived))
 			{
 				packet.Write(lobbyId);
-				packet.Write(message);
+				packet.Write(lobbyName);
 
 				sendHandler(packet);
 			}
 		}
 
-		public static void TimerEvent(int lobbyId, bool isDecreasing, float timeLeft, Action<Packet> sendHandler)
+		public static void TimerEvent(int lobbyId, bool isDecreasing, int timeLeft, Action<Packet> sendHandler)
 		{
 			using (Packet packet = new Packet((int)LobbyPacketsToGameServer.TimerEvent))
 			{
@@ -150,11 +170,26 @@ namespace PokerSynchronisation
 			}
 		}
 
-		public static void ConnectionToLobbyApprovance(int connectedLobbyId, Action<Packet> sendHandler)
+		public static void ConnectionToLobbyApprovance(int connectedLobbyId, int connectedPlayerId, Action<Packet> sendHandler)
 		{
 			using (Packet packet = new Packet((int)LobbyPacketsToGameServer.ConnectionToLobbyApprovance))
 			{
 				packet.Write(connectedLobbyId);
+				packet.Write(true);
+				packet.Write(connectedPlayerId);
+
+				sendHandler(packet);
+			}
+		}
+
+		public static void ConnectionToLobbyApprovance(int connectedLobbyId, int connectedPlayerId, string message, Action<Packet> sendHandler)
+		{
+			using (Packet packet = new Packet((int)LobbyPacketsToGameServer.ConnectionToLobbyApprovance))
+			{
+				packet.Write(connectedLobbyId);
+				packet.Write(false);
+				packet.Write(connectedPlayerId);
+				packet.Write(message);
 
 				sendHandler(packet);
 			}
@@ -267,11 +302,12 @@ namespace PokerSynchronisation
 		{
 			using (Packet packet = new Packet((int)LobbyPacketsToGameServer.ShowAllCards))
 			{
-				packet.Write(lobbyId);
-
 				if (firstCards.Count == secondCards.Count &&
 					firstCards.Count == playersOrderIds.Count)
 				{
+					packet.Write(lobbyId);
+					packet.Write(firstCards.Count);
+
 					for (int i = 0; i < playersOrderIds.Count; i++)
 					{
 						packet.Write(playersOrderIds[i]);
