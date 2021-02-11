@@ -31,7 +31,7 @@ namespace PokerSynchronisation
 			Dealer = 11,                            //sends dealer's server id
 			GiveCard = 12,                          //
 			ShowTableCard = 13,                     //
-			ShowPlayerBet = 15,                //
+			ShowPlayerBet = 15,                     //
 			WinAmount = 16,                         //
 			SetMoveableVariables = 17,              //
 			TurnApprovance = 18,                    //
@@ -47,7 +47,6 @@ namespace PokerSynchronisation
 			EndTurn = 28,
 			ShowTimer = 29,
 			CollectAllBets = 30
-			//TODO:Add timer!
 		}
 	}
 	#endregion
@@ -145,7 +144,7 @@ namespace PokerSynchronisation
 			}
 		}
 
-		public static void ShowTableCard(int[] types, int[] suits, int[] indexes, Action<Packet> sendHandler)
+		public static void ShowTableCards(int[] types, int[] suits, int[] indexes, Action<Packet> sendHandler)
 		{
 			using (Packet packet = new Packet((int)ServerPacketsToClient.ShowTableCard))
 			{
@@ -354,7 +353,7 @@ namespace PokerSynchronisation
 
 		public static void ShowTimer(int to, bool isDecreasing, int timeLeft, Action<Packet> sendHandler)
 		{
-			using (Packet packet = new Packet((int)ServerPacketsToClient.Welcome))
+			using (Packet packet = new Packet((int)ServerPacketsToClient.ShowTimer))
 			{
 				packet.Write(to);
 				packet.Write(isDecreasing);
@@ -366,7 +365,7 @@ namespace PokerSynchronisation
 
 		public static void CollectAllBets(Action<Packet> sendHandler)
 		{
-			using (Packet packet = new Packet((int)ServerPacketsToClient.Welcome))
+			using (Packet packet = new Packet((int)ServerPacketsToClient.CollectAllBets))
 			{
 				sendHandler(packet);
 			}
