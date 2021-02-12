@@ -9,5 +9,7 @@
 		public const int StartDelay = 10 * 1000;
 
 		public const int MaxPlayers = 7;
+
+		public const int LobbyTimerId = -1;
 	}
 }

@@ -11,6 +11,5 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Network\Network.csproj" />
-    <ProjectReference Include="..\..\TexasHoldemEngine\src\TexasHoldem.Logic\TexasHoldem.Logic.csproj" />
   </ItemGroup>
 </Project>
