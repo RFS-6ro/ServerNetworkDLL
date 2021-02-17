@@ -7,6 +7,6 @@ namespace Network
 		public const int PORT = 26950;
 		public const int TEST_SERVERPORT = 26951;
 
-		public const string LOCAL_HOST_IP = "127.0.0.1";
+		public const string LOCAL_HOST_IP = "192.168.0.131";
 	}
 }
