@@ -58,6 +58,7 @@ namespace Network
 				{
 					using (Packet packet = new Packet(packetBytes))
 					{
+						Console.WriteLine("packet = " + packet.ToString());
 						int packetId = packet.ReadInt();
 
 						HandleData(packetId, packet); // Call appropriate method to handle the packet

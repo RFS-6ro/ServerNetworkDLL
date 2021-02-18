@@ -10,17 +10,18 @@ namespace Network
 		private static bool actionToExecuteOnMainThread = false;
 
 		/// <summary>Sets an action to be executed on the main thread.</summary>
-		/// <param name="_action">The action to be executed on the main thread.</param>
-		public static void ExecuteOnMainThread(Action _action)
+		/// <param name="action">The action to be executed on the main thread.</param>
+		public static void ExecuteOnMainThread(Action action)
 		{
-			if (_action == null)
+
+			if (action == null)
 			{
 				return;
 			}
 
 			lock (executeOnMainThread)
 			{
-				executeOnMainThread.Add(_action);
+				executeOnMainThread.Add(action);
 				actionToExecuteOnMainThread = true;
 			}
 		}

@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace Network
 {
 	public partial class Packet : IDisposable
 	{
-
 		private List<byte> _buffer;
 		private byte[] _readableBuffer;
 		private int _readPosition;
@@ -97,6 +97,16 @@ namespace Network
 		{
 			Dispose(true);
 			GC.SuppressFinalize(this);
+		}
+
+		public override string ToString()
+		{
+			StringBuilder builder = new StringBuilder();
+			for (int i = 0; i < Length; i++)
+			{
+				builder.Append(_buffer[i]);
+			}
+			return builder.ToString();
 		}
 	}
 }
