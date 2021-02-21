@@ -5,15 +5,15 @@ namespace PokerSynchronisation
 {
 	public class LobbyIdentifierData
 	{
-		public string Name { get; set; }
+		public string Name;
 
-		public int ID { get; set; }
+		public int ID;
 
-		public int NumberOfPlayers { get; set; }
+		public int NumberOfPlayers;
 
-		public int SmallBlind { get; set; }
+		public int SmallBlind;
 
-		public int BuyIn { get; set; }
+		public int BuyIn;
 
 		public void FromString(string data)
 		{

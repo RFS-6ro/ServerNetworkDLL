@@ -6,10 +6,10 @@ namespace Network
 {
 	public class ServerIdentifierData
 	{
-		public string IpAddress { get; private set; }
-		public int Port { get; private set; }
+		public string IpAddress;
+		public int Port;
 
-		private byte[] IdentityArrayOfBytes { get; set; } = null;
+		private byte[] IdentityArrayOfBytes = null;
 
 		private ServerIdentifierData() { }
 
