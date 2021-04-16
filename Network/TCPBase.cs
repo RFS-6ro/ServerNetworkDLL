@@ -54,7 +54,7 @@ namespace Network
 			{
 				// While packet contains data AND packet data length doesn't exceed the length of the packet we're reading
 				byte[] packetBytes = _receivedPacket.ReadBytes(packetLength);
-				IThreadManager.ExecuteOnMainThread(() =>
+				ThreadManager.ExecuteOnMainThread(() =>
 				{
 					using (Packet packet = new Packet(packetBytes))
 					{
